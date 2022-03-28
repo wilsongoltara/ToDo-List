@@ -7,6 +7,7 @@ const addTaskTInDOM = (() => {
   const listLength = taskList.length - 1;
   const task = taskList[listLength];
   const liTask = document.createElement('li');
+  liTask.classList = 'list-group-item';
   liTask.innerText = task;
   olTask.appendChild(liTask);
   inputTask.value = '';
@@ -28,12 +29,25 @@ const listTaskRenderization = (() => {
     for (const task of taskList) {
       const liTask = document.createElement('li');
       liTask.innerText = task;
+      liTask.classList = 'list-group-item';
       olTask.appendChild(liTask);
     }
   }
 });
 
-buttonAdd.addEventListener('click', addTaskToLocalStorage);
+
+document.addEventListener('click', (event) => {
+  const clicked = event.target;
+
+  if (clicked.classList.contains('btnAddTask')) {
+    addTaskToLocalStorage();
+  }
+
+  if (clicked.classList.contains('list-group-item')) {
+    clicked.style.backgroundColor = 'gray';
+    clicked.style.color = 'white';
+  }
+});
 
 window.onload = () => {
   listTaskRenderization();

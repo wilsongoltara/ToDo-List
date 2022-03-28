@@ -9,19 +9,19 @@
   <title>Todo List</title>
 </head>
 <body>
-  <main class="container text-center">
+  <main class="container text-center ">
     <header class="container header">
       <h1 class="display-3">Minha Lista de Tarefas</h1>
       <p class="lead" id="funcionamento">Clique duas vezes em um item para marcá-lo como completo</p>
     </header>
     <form class="container-fluid" method="get">
       <div class="container mb-3">
-        <input class="form-control" type="text" id="texto-tarefa" placeholder="Digite sua tarefa">
+        <input class="" type="text" id="texto-tarefa" placeholder="Digite sua tarefa">
+        <button class="btnAddTask btn btn-outline-primary" id="criar-tarefa" type="button">Adicionar</button>
       </div>
       <div class="container mb-3">
-        <button class="btn btn-outline-primary" id="criar-tarefa" type="button">Adicionar</button>
       </div>
-      <ol id="lista-tarefas"></ol>
+      <ol class="list-group" id="lista-tarefas"></ol>
     </form>
   </main>
   <script src="script.js"></script>
