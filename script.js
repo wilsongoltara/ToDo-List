@@ -49,24 +49,28 @@ const selectedTask = ((event) => {
   clicked.style.color = 'white';
 });
 
-const taskConcluid = ((event) => {
-  const clicked = event.target;
-  clicked.classList.add('completed');
-});
-
-const removeTask = ((event) => {
-  event.target.classList.remove('completed');
+const clearList = (() => {
+  const listTasks = document.getElementById('lista-tarefas');
+  while (listTasks.firstChild) {
+    listTasks.removeChild(listTasks.firstChild);
+  }
+  localStorage.clear();
+  listTaskRenderization();
 });
 
 document.addEventListener('click', (event) => {
   const clicked = event.target;
 
-  if (clicked.classList.contains('btnAddTask')) {
+  if (clicked.classList.contains('btn-add-task')) {
     addTaskToLocalStorage();
   }
 
   if (clicked.classList.contains('task')) {
     selectedTask(event);
+  }
+
+  if (clicked.classList.contains('btn-all-clear')) {
+    clearList();
   }
 }, false);
 
@@ -75,12 +79,12 @@ document.addEventListener('dblclick', (event) => {
 
   if (clicked.classList.contains('task')) {
     if (clicked.classList.contains('completed')) {
-      removeTask(event);
+      clicked.classList.remove('completed');
     } else {
-      taskConcluid(event);
+      clicked.classList.add('completed');
     }
   }
-});
+}, false);
 
 window.onload = () => {
   listTaskRenderization();
