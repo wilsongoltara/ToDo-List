@@ -37,14 +37,25 @@ const listTaskRenderization = (() => {
 const selectedTask = ((event) => {
   const clicked = event.target;
   const listTasks = document.getElementsByClassName('task');
-  for (const index of listTasks) {
-    const cssObj = window.getComputedStyle(index, null);
+  for (const task of listTasks) {
+    const cssObj = window.getComputedStyle(task, null);
     const backgroundColor = cssObj.getPropertyValue('background-color');
     if (backgroundColor === 'rgb(128, 128, 128)') {
-      index.style.backgroundColor = 'white';
+      task.style.backgroundColor = 'white';
+      task.style.color = 'black';
     }
   }
   clicked.style.backgroundColor = 'gray';
+  clicked.style.color = 'white';
+});
+
+const taskConcluid = ((event) => {
+  const clicked = event.target;
+  clicked.classList.add('completed');
+});
+
+const removeTask = ((event) => {
+  event.target.classList.remove('completed');
 });
 
 document.addEventListener('click', (event) => {
@@ -56,6 +67,18 @@ document.addEventListener('click', (event) => {
 
   if (clicked.classList.contains('task')) {
     selectedTask(event);
+  }
+}, false);
+
+document.addEventListener('dblclick', (event) => {
+  const clicked = event.target;
+
+  if (clicked.classList.contains('task')) {
+    if (clicked.classList.contains('completed')) {
+      removeTask(event);
+    } else {
+      taskConcluid(event);
+    }
   }
 });
 
