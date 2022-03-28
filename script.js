@@ -1,4 +1,3 @@
-const buttonAdd = document.getElementById('criar-tarefa');
 const inputTask = document.getElementById('texto-tarefa');
 const olTask = document.getElementById('lista-tarefas');
 
@@ -7,7 +6,7 @@ const addTaskTInDOM = (() => {
   const listLength = taskList.length - 1;
   const task = taskList[listLength];
   const liTask = document.createElement('li');
-  liTask.classList = 'list-group-item';
+  liTask.classList = 'list-group-item task';
   liTask.innerText = task;
   olTask.appendChild(liTask);
   inputTask.value = '';
@@ -28,13 +27,25 @@ const listTaskRenderization = (() => {
     const taskList = JSON.parse(localStorage.getItem('tasks'));
     for (const task of taskList) {
       const liTask = document.createElement('li');
+      liTask.classList = 'list-group-item task';
       liTask.innerText = task;
-      liTask.classList = 'list-group-item';
       olTask.appendChild(liTask);
     }
   }
 });
 
+const selectedTask = ((event) => {
+  const clicked = event.target;
+  const listTasks = document.getElementsByClassName('task');
+  for (const index of listTasks) {
+    const cssObj = window.getComputedStyle(index, null);
+    const backgroundColor = cssObj.getPropertyValue('background-color');
+    if (backgroundColor === 'rgb(128, 128, 128)') {
+      index.style.backgroundColor = 'white';
+    }
+  }
+  clicked.style.backgroundColor = 'gray';
+});
 
 document.addEventListener('click', (event) => {
   const clicked = event.target;
@@ -43,9 +54,8 @@ document.addEventListener('click', (event) => {
     addTaskToLocalStorage();
   }
 
-  if (clicked.classList.contains('list-group-item')) {
-    clicked.style.backgroundColor = 'gray';
-    clicked.style.color = 'white';
+  if (clicked.classList.contains('task')) {
+    selectedTask(event);
   }
 });
 
