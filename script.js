@@ -2,9 +2,9 @@ const inputTask = document.getElementById('texto-tarefa');
 const olTask = document.getElementById('lista-tarefas');
 
 const addTaskTInDOM = (() => {
-  const taskList = JSON.parse(localStorage.getItem('tasks'));
-  const listLength = taskList.length - 1;
-  const task = taskList[listLength];
+  const listTask = JSON.parse(localStorage.getItem('tasks'));
+  const listLength = listTask.length - 1;
+  const task = listTask[listLength];
   const liTask = document.createElement('li');
   liTask.classList = 'list-group-item task';
   liTask.innerText = task;
@@ -24,6 +24,7 @@ const listTaskRenderization = (() => {
   if (localStorage.getItem('tasks') === null) {
     localStorage.setItem('tasks', JSON.stringify([]));
   } else {
+    olTask.innerHTML = '';
     const taskList = JSON.parse(localStorage.getItem('tasks'));
     for (const task of taskList) {
       const liTask = document.createElement('li');
@@ -50,11 +51,28 @@ const selectedTask = ((event) => {
 });
 
 const clearList = (() => {
-  const listTasks = document.getElementById('lista-tarefas');
-  while (listTasks.firstChild) {
-    listTasks.removeChild(listTasks.firstChild);
+  while (olTask.firstChild) {
+    olTask.removeChild(olTask.firstChild);
   }
   localStorage.clear();
+  listTaskRenderization();
+});
+
+const removeTasksLocalStorage = ((taskCompleted) => {
+  const listTask = JSON.parse(localStorage.getItem('tasks'));
+  const pos = listTask.indexOf(taskCompleted);
+  listTask.splice(pos, 1);
+  localStorage.setItem('tasks', JSON.stringify(listTask));
+});
+
+const removeFinisheds = (() => {
+  const listTasksCompleted = document.querySelectorAll('.completed');
+  if (listTasksCompleted.length === 0) {
+    alert('Nenhuma tarefa finalizada!');
+  }
+  listTasksCompleted.forEach((task) => {
+    removeTasksLocalStorage(task.innerText);
+  });
   listTaskRenderization();
 });
 
@@ -72,7 +90,11 @@ document.addEventListener('click', (event) => {
   if (clicked.classList.contains('btn-all-clear')) {
     clearList();
   }
-}, false);
+
+  if (clicked.classList.contains('btn-remove-finished')) {
+    removeFinisheds();
+  }
+});
 
 document.addEventListener('dblclick', (event) => {
   const clicked = event.target;
@@ -84,7 +106,7 @@ document.addEventListener('dblclick', (event) => {
       clicked.classList.add('completed');
     }
   }
-}, false);
+});
 
 window.onload = () => {
   listTaskRenderization();
