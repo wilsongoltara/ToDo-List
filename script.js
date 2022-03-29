@@ -18,20 +18,15 @@ const addTaskToLocalStorage = (() => {
   listTask.push(task);
   localStorage.setItem('tasks', JSON.stringify(listTask));
   addTaskTInDOM();
+  saveList();
 });
 
 const listTaskRenderization = (() => {
-  if (localStorage.getItem('tasks') === null) {
+  if (localStorage.getItem('listSave') === null && localStorage.getItem('listSave') === null) {
     localStorage.setItem('tasks', JSON.stringify([]));
+    localStorage.setItem('listSave', JSON.stringify(''));
   } else {
-    olTask.innerHTML = '';
-    const taskList = JSON.parse(localStorage.getItem('tasks'));
-    for (const task of taskList) {
-      const liTask = document.createElement('li');
-      liTask.classList = 'list-group-item task';
-      liTask.innerText = task;
-      olTask.appendChild(liTask);
-    }
+    olTask.innerHTML = JSON.parse(localStorage.getItem('listSave'));
   }
 });
 
@@ -72,8 +67,23 @@ const removeFinisheds = (() => {
   }
   listTasksCompleted.forEach((task) => {
     removeTasksLocalStorage(task.innerText);
+    olTask.removeChild(task);
   });
+  saveList();
   listTaskRenderization();
+});
+
+const taskCompleted = ((event) => {
+  const clicked = event.target;
+  if (clicked.classList.contains('completed')) {
+    clicked.classList.remove('completed');
+  } else {
+    clicked.classList.add('completed');
+  }
+});
+
+const saveList = (() => {
+  localStorage.setItem('listSave', JSON.stringify(olTask.innerHTML));
 });
 
 document.addEventListener('click', (event) => {
@@ -94,17 +104,16 @@ document.addEventListener('click', (event) => {
   if (clicked.classList.contains('btn-remove-finished')) {
     removeFinisheds();
   }
+
+  if (clicked.classList.contains('btn-save-list-tasks')) {
+    saveList();
+  }
 });
 
 document.addEventListener('dblclick', (event) => {
   const clicked = event.target;
-
   if (clicked.classList.contains('task')) {
-    if (clicked.classList.contains('completed')) {
-      clicked.classList.remove('completed');
-    } else {
-      clicked.classList.add('completed');
-    }
+    taskCompleted(event);
   }
 });
 
