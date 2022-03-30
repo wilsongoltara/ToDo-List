@@ -9,3 +9,8 @@ body {
 .completed {
   text-decoration: line-through solid black;
 }
+
+.gray {
+  background-color: gray;
+  color: black;
+}

@@ -1,6 +1,10 @@
 const inputTask = document.getElementById('texto-tarefa');
 const olTask = document.getElementById('lista-tarefas');
 
+const saveList = (() => {
+  localStorage.setItem('listSave', JSON.stringify(olTask.innerHTML));
+});
+
 const addTaskTInDOM = (() => {
   const listTask = JSON.parse(localStorage.getItem('tasks'));
   const listLength = listTask.length - 1;
@@ -22,7 +26,7 @@ const addTaskToLocalStorage = (() => {
 });
 
 const listTaskRenderization = (() => {
-  if (localStorage.getItem('listSave') === null && localStorage.getItem('listSave') === null) {
+  if (localStorage.getItem('listSave') === null) {
     localStorage.setItem('tasks', JSON.stringify([]));
     localStorage.setItem('listSave', JSON.stringify(''));
   } else {
@@ -33,16 +37,12 @@ const listTaskRenderization = (() => {
 const selectedTask = ((event) => {
   const clicked = event.target;
   const listTasks = document.getElementsByClassName('task');
-  for (const task of listTasks) {
-    const cssObj = window.getComputedStyle(task, null);
-    const backgroundColor = cssObj.getPropertyValue('background-color');
-    if (backgroundColor === 'rgb(128, 128, 128)') {
-      task.style.backgroundColor = 'white';
-      task.style.color = 'black';
+  for (let index = 0; index < listTasks.length; index += 1) {
+    if (listTasks[index].classList.contains('gray')) {
+      listTasks[index].classList.remove('gray');
     }
   }
-  clicked.style.backgroundColor = 'gray';
-  clicked.style.color = 'white';
+  clicked.classList.add('gray');
 });
 
 const clearList = (() => {
@@ -82,31 +82,56 @@ const taskCompleted = ((event) => {
   }
 });
 
-const saveList = (() => {
-  localStorage.setItem('listSave', JSON.stringify(olTask.innerHTML));
+const searchIndex = (() => {
+  const liTask = document.getElementsByClassName('task');
+  for (let index = 0; index < liTask.length; index += 1) {
+    if (liTask[index].className.includes('gray')) {
+      return index;
+    }
+  }
 });
+
+const moveUp = (() => {
+  const indexOfTaskSelected = searchIndex();
+  const liTask = document.getElementsByClassName('task');
+  if (indexOfTaskSelected === undefined) {
+    return null;
+  }
+  if (indexOfTaskSelected === 0) {
+    return null;
+  }
+
+  const taskSelected = liTask[indexOfTaskSelected];
+  const placeToReturnTask = liTask[indexOfTaskSelected - 1];
+  olTask.insertBefore(taskSelected, placeToReturnTask);
+});
+
+const moveDown = (() => {
+  const indexOfTaskSelected = searchIndex();
+  const liTask = document.getElementsByClassName('task');
+  if (indexOfTaskSelected === undefined) {
+    return null;
+  }
+
+  const placeToReturnTask = liTask[indexOfTaskSelected + 1];
+  const taskSelected = liTask[indexOfTaskSelected];
+  if (placeToReturnTask === undefined) {
+    return null;
+  }
+  olTask.insertBefore(taskSelected, placeToReturnTask.nextElementSibling);
+});
+
+document.getElementById('criar-tarefa').addEventListener('click', addTaskToLocalStorage);
+document.getElementById('salvar-tarefas').addEventListener('click', saveList);
+document.getElementById('mover-cima').addEventListener('click', moveUp);
+document.getElementById('mover-baixo').addEventListener('click', moveDown);
+document.getElementById('remover-finalizados').addEventListener('click', removeFinisheds);
+document.getElementById('apaga-tudo').addEventListener('click', clearList);
 
 document.addEventListener('click', (event) => {
   const clicked = event.target;
-
-  if (clicked.classList.contains('btn-add-task')) {
-    addTaskToLocalStorage();
-  }
-
   if (clicked.classList.contains('task')) {
     selectedTask(event);
-  }
-
-  if (clicked.classList.contains('btn-all-clear')) {
-    clearList();
-  }
-
-  if (clicked.classList.contains('btn-remove-finished')) {
-    removeFinisheds();
-  }
-
-  if (clicked.classList.contains('btn-save-list-tasks')) {
-    saveList();
   }
 });
 
