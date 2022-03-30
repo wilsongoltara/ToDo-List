@@ -121,10 +121,16 @@ const moveDown = (() => {
   olTask.insertBefore(taskSelected, placeToReturnTask.nextElementSibling);
 });
 
+const removeSelected = (() => {
+  const selected = document.querySelector('.gray');
+  olTask.removeChild(selected);
+});
+
 document.getElementById('criar-tarefa').addEventListener('click', addTaskToLocalStorage);
 document.getElementById('salvar-tarefas').addEventListener('click', saveList);
 document.getElementById('mover-cima').addEventListener('click', moveUp);
 document.getElementById('mover-baixo').addEventListener('click', moveDown);
+document.getElementById('remover-selecionado').addEventListener('click', removeSelected);
 document.getElementById('remover-finalizados').addEventListener('click', removeFinisheds);
 document.getElementById('apaga-tudo').addEventListener('click', clearList);
 
